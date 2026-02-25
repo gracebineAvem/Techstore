@@ -1,23 +1,27 @@
-from app import auth
+from dotenv import load_dotenv
+load_dotenv()
+import os
+from fastapi import FastAPI, Request, Depends, Form, status, HTTPException
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
-from fastapi import Request
-from app.models import Product
-from app.database import SessionLocal
 from fastapi.templating import Jinja2Templates
-templates = Jinja2Templates(directory="templates")
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine, or_
+import uvicorn
+import datetime
+from app import models, database, auth
+from app.models import Product, Cart, Order, OrderItem, User, Base, ChatMessage
+from app.database import SessionLocal
 
-# Route GET pour afficher le formulaire d'inscription
+# Création automatique des tables si elles n'existent pas
+DATABASE_URL = os.environ.get("DATABASE_URL")
+engine = create_engine(DATABASE_URL)
+Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(auth.router)
 templates = Jinja2Templates(directory="templates")
-
-# Route GET pour afficher le formulaire d'inscription
-@app.get("/signup", response_class=HTMLResponse)
-def signup_form(request: Request):
-    return templates.TemplateResponse("signup.html", {"request": request})
 
 # Route GET pour afficher la liste des produits
 @app.get("/products", response_class=HTMLResponse)
