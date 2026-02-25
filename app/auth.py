@@ -1,4 +1,23 @@
 
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Form
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
+from passlib.context import CryptContext
+from jose import JWTError, jwt
+from app import models, database
+import os
+from dotenv import load_dotenv
+from datetime import datetime, timedelta
+
+router = APIRouter()
+templates = Jinja2Templates(directory="templates")
+
+# Route GET pour afficher le formulaire d'inscription
+@router.get("/signup", response_class=HTMLResponse)
+def signup_form(request: Request):
+    return templates.TemplateResponse("signup.html", {"request": request})
+
 # auth.py
 # Gestion de l'authentification pour Techstore By Michelle
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Form
