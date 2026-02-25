@@ -6,7 +6,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from sqlalchemy import create_engine, or_
+from sqlalchemy import or_
 import uvicorn
 import datetime
 from app import models, database, auth
@@ -30,12 +30,8 @@ from dotenv import load_dotenv
 load_dotenv()
 # Création automatique des tables si elles n'existent pas
 from app.models import Base
-from sqlalchemy import create_engine
 import os
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
-engine = create_engine(DATABASE_URL)
-Base.metadata.create_all(bind=engine)
 from fastapi import FastAPI, Request, Depends, Form, status, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
