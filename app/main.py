@@ -1,3 +1,31 @@
+from app import auth
+from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+from fastapi import Request
+from app.models import Product
+from app.database import SessionLocal
+from fastapi.templating import Jinja2Templates
+templates = Jinja2Templates(directory="templates")
+
+# Route GET pour afficher le formulaire d'inscription
+app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+app.include_router(auth.router)
+templates = Jinja2Templates(directory="templates")
+
+# Route GET pour afficher le formulaire d'inscription
+@app.get("/signup", response_class=HTMLResponse)
+def signup_form(request: Request):
+    return templates.TemplateResponse("signup.html", {"request": request})
+
+# Route GET pour afficher la liste des produits
+@app.get("/products", response_class=HTMLResponse)
+def products_page(request: Request):
+    db = SessionLocal()
+    products = db.query(Product).all()
+    db.close()
+    return templates.TemplateResponse("products.html", {"request": request, "products": products})
 from dotenv import load_dotenv
 load_dotenv()
 # Création automatique des tables si elles n'existent pas
