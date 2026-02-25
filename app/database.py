@@ -9,7 +9,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./techstore.db")
+
+# Forcer SQLite même en ligne si DATABASE_URL n'est pas défini
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+	DATABASE_URL = "sqlite:///./techstore.db"
 
 engine = create_engine(
 	DATABASE_URL, connect_args={"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
