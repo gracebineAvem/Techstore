@@ -13,10 +13,6 @@ from app import models, database, auth
 from app.models import Product, Cart, Order, OrderItem, User, Base, ChatMessage
 from app.database import SessionLocal
 
-# Création automatique des tables si elles n'existent pas
-DATABASE_URL = os.environ.get("DATABASE_URL")
-engine = create_engine(DATABASE_URL)
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
